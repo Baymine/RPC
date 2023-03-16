@@ -18,6 +18,7 @@
 
 namespace tinyrpc {
 
+// 负责监听和接受新的客户端连接。
 class TcpAcceptor {
 
  public:
@@ -49,6 +50,10 @@ class TcpAcceptor {
 };
 
 
+// 一个是主协程，会不断执行 Reactor 的 loop 函数循环的去 epoll_wait，直至 listenfd 可读。
+
+// 另外一个协程是 m_accept_cor，即 accept 的协程。会不断循环的去 accept，
+// 每当 accept 返回时就取出这个连接，交个某一个 IO 线程（也即 SubReactor）。
 class TcpServer {
 
  public:
@@ -93,7 +98,7 @@ class TcpServer {
 
  private:
   
-  NetAddress::ptr m_addr;  // listen address
+  NetAddress::ptr m_addr;  // 监听地址
 
   TcpAcceptor::ptr m_acceptor;  
 
