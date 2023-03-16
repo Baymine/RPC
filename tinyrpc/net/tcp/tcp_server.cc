@@ -74,6 +74,7 @@ namespace tinyrpc
     }
 
     // to accept new client
+    // 调用了accept函数，获取一个新连接
     int TcpAcceptor::toAccept()
     {
 
@@ -141,6 +142,7 @@ namespace tinyrpc
 
     void TcpServer::start()
     {
+        // acceptor协程，不断循环去accept
         m_acceptor.reset(new TcpAcceptor(m_addr));
         m_acceptor->init();
         m_accept_cor = GetCoroutinePool()->getCoroutineInstanse();
@@ -150,7 +152,10 @@ namespace tinyrpc
         tinyrpc::Coroutine::Resume(m_accept_cor.get());
 
         m_io_pool->start();
-        m_main_reactor->loop();
+        std::cout << "m_main_reactor->loop();" << std::endl;
+        m_main_reactor->loop();  // 主协程，不断执行Reactor的loop函数循环
+        std::cout << "m_main_reactor->loop();" << std::endl;
+
     }
 
     TcpServer::~TcpServer()
@@ -159,9 +164,9 @@ namespace tinyrpc
         DebugLog << "~TcpServer";
     }
 
+    // 每当accept返回的时候，取出一个链接，交给一个IO线程，也就是Subreactor
     void TcpServer::MainAcceptCorFunc()
     {
-
         while (!m_is_stop_accept) {
 
             int fd = m_acceptor->toAccept();

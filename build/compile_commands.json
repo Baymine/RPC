@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/mnt/文档/cpp/project/tinyrpc/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/tRPC.dir/main.cpp.o -c /mnt/文档/cpp/project/tinyrpc/main.cpp",
+  "file": "/mnt/文档/cpp/project/tinyrpc/main.cpp"
+}
+]

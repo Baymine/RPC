@@ -103,13 +103,13 @@ class TcpServer {
 
   bool m_is_stop_accept {false};
 
-  Coroutine::ptr m_accept_cor;  // coroutine of m_acceptor
+  Coroutine::ptr m_accept_cor;  // m_accept_cor 所在的协程
   
   AbstractDispatcher::ptr m_dispatcher; 
 
   AbstractCodeC::ptr m_codec; 
 
-  IOThreadPool::ptr m_io_pool; // IO thread pool
+  IOThreadPool::ptr m_io_pool; // IO thread pool, 每一个IO线程就是一个SubReactor
 
   ProtocalType m_protocal_type {TinyPb_Protocal};
 

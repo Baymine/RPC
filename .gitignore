@@ -1,9 +1,10 @@
 
 
-build/*
-bin/*
-lib/*
-
+# build/*
+# bin/*
+# lib/*
+cmake-build-debug/
+.vscode/
 *.swp
 *.swo
 *.log
