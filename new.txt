@@ -1,0 +1,5 @@
+    int i;
+        printf("Thread1: %d\n", i);
+    int i;
+        printf("Thread2: %d\n", i);
+int main(int argc, char* argv[])

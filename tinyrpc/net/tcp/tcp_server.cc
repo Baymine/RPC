@@ -239,7 +239,6 @@ namespace tinyrpc
             DebugLog << "fd " << fd << "have exist, reset it";
             it->second = std::make_shared<TcpConnection>(this, io_thread, fd, 128, getPeerAddr());
             return it->second;
-
         } else {
             DebugLog << "fd " << fd << "did't exist, new it";
             TcpConnection::ptr conn = std::make_shared<TcpConnection>(this, io_thread, fd, 128, getPeerAddr());

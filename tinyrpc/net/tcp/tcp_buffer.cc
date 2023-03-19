@@ -82,7 +82,9 @@ void TcpBuffer::readFromBuffer(std::vector<char>& re, int size) {
 
 }
 
+// 当读取的内存大于三分之一的总内存之后，重置内存（缓冲区内存与初始的内存一致，这样避免了新内存的拷贝）
 void TcpBuffer::adjustBuffer() {
+  // 说明前三分之一已经被读取，可以进行调整
   if (m_read_index > static_cast<int>(m_buffer.size() / 3)) {
     
     std::vector<char> new_buffer(m_buffer.size());
