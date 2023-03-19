@@ -34,7 +34,7 @@ IOThread::IOThread() {
 
   DebugLog << "semaphore begin to wait until new thread frinish IOThread::main() to init";
   // wait until new thread finish IOThread::main() func to init 
-  rt = sem_wait(&m_init_semaphore);
+  rt = sem_wait(&m_init_semaphore);   // -1
   assert(rt == 0);
   DebugLog << "semaphore wait end, finish create io thread";
 

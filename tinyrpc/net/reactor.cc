@@ -250,6 +250,7 @@ void Reactor::loop() {
     tmp_tasks.swap(m_pending_tasks);
     lock.unlock();
 
+    // 执行任务队列中的所有任务
 		for (size_t i = 0; i < tmp_tasks.size(); ++i) {
 			// DebugLog << "begin to excute task[" << i << "]";
 			if (tmp_tasks[i]) {
@@ -258,6 +259,8 @@ void Reactor::loop() {
 			// DebugLog << "end excute tasks[" << i << "]";
 		}
 		// DebugLog << "to epoll_wait";
+
+    // -----------------start EPOLL-----------------------
 		int rt = epoll_wait(m_epfd, re_events, MAX_EVENTS, t_max_epoll_timeout);
 
 		// DebugLog << "epoll_wait back";
@@ -289,10 +292,10 @@ void Reactor::loop() {
               delEventInLoopThread(fd);
             } else {
               // if register coroutine, pengding coroutine to common coroutine_tasks
-              if (ptr->getCoroutine()) {
+              if (ptr->getCoroutine()) { // 文件描述符包含协程
                 // the first one coroutine when epoll_wait back, just directly resume by this thread, not add to global CoroutineTaskQueue
                 // because every operate CoroutineTaskQueue should add mutex lock
-                if (!first_coroutine) {
+                if (!first_coroutine) {   // 首先保存一个协程在一个变量中，而不是加入到协程任务队列中
                   first_coroutine = ptr->getCoroutine();
                   continue;
                 }
@@ -309,6 +312,7 @@ void Reactor::loop() {
                 }
 
               } else {
+                // 获取事件的读写回调函数
                 std::function<void()> read_cb;
                 std::function<void()> write_cb;
                 read_cb = ptr->getCallBack(READ);

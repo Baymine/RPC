@@ -1,109 +1,126 @@
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <sys/timerfd.h>
+#include <sys/epoll.h>
+#include <unistd.h>
 #include <iostream>
-#include <chrono>
-#include <thread>
-#include <string>
-#include <functional>
+#include <cstring>
 
-namespace snippet
-{
-  using namespace std;
-  // This function splits a given string into multiple tokens and adds them to a vector
-  void split(const string &s, vector<string> &tokens, const string &delimiters = " ")
-  {
-    // Initialize the starting positions of the last and current position
-    string::size_type lastPos = s.find_first_not_of(delimiters, 0);
-    string::size_type pos = s.find_first_of(delimiters, lastPos);
+namespace learningSem{
 
-    // While there are still tokens to be found in the string
-    while (string::npos != pos || string::npos != lastPos)
+    #define N 10
+
+    sem_t sem1, sem2;
+
+    void* thread1(void* arg)
     {
-      // Add the substring from the last position to the current one to the tokens vector
-      tokens.push_back(s.substr(lastPos, pos - lastPos));
-      // Update the last and current positions
-      lastPos = s.find_first_not_of(delimiters, pos);
-      pos = s.find_first_of(delimiters, lastPos);
+        int i;
+        for (i = 0; i < N; i++) {
+            sem_wait(&sem1);  // 等待信号量 sem1
+            printf("Thread1: %d\n", i);
+            sem_post(&sem2);  // 发送信号量 sem2
+        }
+        pthread_exit(NULL);
     }
-  }
-  void printMessage(const std::string &message, std::function<void()> callback)
-  {
-    std::cout << "Thread " << std::this_thread::get_id() << " is processing..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(3));
-    std::cout << "Thread " << std::this_thread::get_id() << ": " << message << std::endl;
-    callback();
-  }
 
-  int main()
-  {
-    std::cout << "Main thread " << std::this_thread::get_id() << " started" << std::endl;
-    auto callback = []()
-    { std::cout << "Callback called from thread " << std::this_thread::get_id() << std::endl; };
-    printMessage("Hello, World!", callback);
-    std::cout << "Main thread " << std::this_thread::get_id() << " continues to run" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << "Main thread " << std::this_thread::get_id() << " is finished" << std::endl;
-    return 0;
-  }
+    void* thread2(void* arg)
+    {
+        int i;
+        for (i = 0; i < N; i++) {
+            sem_wait(&sem2);  // 等待信号量 sem2
+            printf("Thread2: %d\n", i);
+            sem_post(&sem1);  // 发送信号量 sem1
+        }
+        pthread_exit(NULL);
+    }
+
+    int main(int argc, char* argv[])
+    {
+        pthread_t tid1, tid2;
+
+        sem_init(&sem1, 0, 0);  // 初始化信号量 sem1，初始值为 0
+        sem_init(&sem2, 0, 1);  // 初始化信号量 sem2，初始值为 1
+
+        pthread_create(&tid1, NULL, thread1, NULL);
+        pthread_create(&tid2, NULL, thread2, NULL);
+
+        pthread_join(tid1, NULL);
+        pthread_join(tid2, NULL);
+
+        sem_destroy(&sem1);
+        sem_destroy(&sem2);
+
+        return 0;
+    }
 }
 
-namespace test
-{
-  // void long_running_task(int duration, std::function<void(int)> callback) {
-  //     // callback(duration);
-  //     std::this_thread::sleep_for(std::chrono::seconds(duration));
-  //     callback(duration);
-  // }
+namespace learningTimefd{
 
-  // void task_callback(int duration) {
-  //     std::cout << "Task finished after " << duration << " seconds." << std::endl;
-  // }
+    int main() {
+        int timer_fd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK);
+        if (timer_fd == -1) {
+            std::cerr << "Failed to create timerfd: " << strerror(errno) << std::endl;
+            return 1;
+        }
 
-  // int main() {
-  //     std::cout << "Starting task." << std::endl;
-  //     long_running_task(3, task_callback);
-  //     std::cout << "Task started, returning control to main function." << std::endl;
-  //     std::this_thread::sleep_for(std::chrono::seconds(1));
-  //     std::cout << "Main function finished." << std::endl;
-  //     return 0;
-  // }
+        struct itimerspec timer_spec;
+        memset(&timer_spec, 0, sizeof(timer_spec));
+        timer_spec.it_value.tv_sec = 1; // 定时器首次触发时间：1秒
+        timer_spec.it_interval.tv_sec = 2; // 定时器重复触发时间间隔：2秒
 
-#include <iostream>
-#include <functional>
-#include <chrono>
-#include <thread>
+        if (timerfd_settime(timer_fd, 0, &timer_spec, nullptr) == -1) {
+            std::cerr << "Failed to set timerfd: " << strerror(errno) << std::endl;
+            close(timer_fd);
+            return 1;
+        }
 
-  void doTask1(std::function<void(int)> callback)
-  {
-    std::cout << "Starting task: 1" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << "Task 1 completed" << std::endl;
-    callback(42);
-  }
+        int epoll_fd = epoll_create1(0);
+        if (epoll_fd == -1) {
+            std::cerr << "Failed to create epoll: " << strerror(errno) << std::endl;
+            close(timer_fd);
+            return 1;
+        }
 
-  void doTask2(std::function<void(int)> callback)
-  {
-    std::cout << "Starting task: 2" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << "Task 2 completed" << std::endl;
-    callback(43);
-  }
+        struct epoll_event event;
+        event.events = EPOLLIN;
+        event.data.fd = timer_fd;
+        if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, timer_fd, &event) == -1) {
+            std::cerr << "Failed to add timerfd to epoll: " << strerror(errno) << std::endl;
+            close(epoll_fd);
+            close(timer_fd);
+            return 1;
+        }
 
-  int main()
-  {
-    std::cout << "Starting tasks" << std::endl;
-    doTask1([](int result)
-            {
-    std::cout << "Task 1 callback completed with result: " << result << std::endl;
-    doTask2([](int result) {
-      std::cout << "Task 2 callback completed with result: " << result << std::endl;
-    }); });
-    std::cout << "Tasks started" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    return 0;
-  }
+        while (true) {
+            struct epoll_event events[10];
+            int num_events = epoll_wait(epoll_fd, events, 10, -1);
+            if (num_events == -1) {
+                std::cerr << "epoll_wait failed: " << strerror(errno) << std::endl;
+                break;
+            }
 
-} // namespace test
+            for (int i = 0; i < num_events; ++i) {
+                if (events[i].data.fd == timer_fd) {
+                    uint64_t expirations;
+                    ssize_t n = read(timer_fd, &expirations, sizeof(expirations));
+                    if (n != sizeof(expirations)) {
+                        std::cerr << "Failed to read timerfd: " << strerror(errno) << std::endl;
+                        break;
+                    }
+                    std::cout << "Timer expired " << expirations << " times." << std::endl;
+                }
+            }
+        }
 
-int main()
-{
-  test::main();
+        close(epoll_fd);
+        close(timer_fd);
+        return 0;
+    }
+
+}
+
+int main(){
+    learningTimefd::main();
 }

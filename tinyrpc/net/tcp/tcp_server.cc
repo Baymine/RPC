@@ -164,7 +164,8 @@ namespace tinyrpc
         DebugLog << "~TcpServer";
     }
 
-    // 每当accept返回的时候，取出一个链接，交给一个IO线程，也就是Subreactor
+    // 每当accept返回的时候，取出一个连接，交给一个IO线程，也就是Subreactor
+    // https://pica.zhimg.com/v2-41982fc9259ebfa210f0af13fac13e57_720w.jpg?source=d16d100b
     void TcpServer::MainAcceptCorFunc()
     {
         while (!m_is_stop_accept) {
@@ -238,7 +239,6 @@ namespace tinyrpc
             DebugLog << "fd " << fd << "have exist, reset it";
             it->second = std::make_shared<TcpConnection>(this, io_thread, fd, 128, getPeerAddr());
             return it->second;
-
         } else {
             DebugLog << "fd " << fd << "did't exist, new it";
             TcpConnection::ptr conn = std::make_shared<TcpConnection>(this, io_thread, fd, 128, getPeerAddr());

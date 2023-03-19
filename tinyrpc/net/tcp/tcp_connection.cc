@@ -176,6 +176,7 @@ void TcpConnection::input() {
 
 }
 
+// 处理TCP连接上的数据
 void TcpConnection::execute() {
   // DebugLog << "begin to do execute";
 
