@@ -199,7 +199,7 @@ void TcpConnection::execute() {
     }
     DebugLog << ss.str();
     DebugLog << "=====================================";
-    m_codec->decode(m_read_buffer.get(), data.get());
+    m_codec->decode(m_read_buffer.get(), data.get());  // 将解码后的数据放到对应的data变量中存储起来
     if (!data->decode_succ) {
       ErrorLog << "it parse request error of fd " << m_fd;
       break;
@@ -213,6 +213,8 @@ void TcpConnection::execute() {
       // TODO:
       std::shared_ptr<TinyPbStruct> tmp = std::dynamic_pointer_cast<TinyPbStruct>(data);
       if (tmp) {
+        // 用于存储从服务器端接收到的回复数据。这个变量的主要作用是在客户端与服务器进行通信时，
+        // 缓存服务器返回的响应，以便客户端程序在需要时查询和处理这些响应。
         m_reply_datas.insert(std::make_pair(tmp->msg_req, tmp));
       }
     }

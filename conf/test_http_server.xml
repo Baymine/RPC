@@ -10,10 +10,10 @@
     <log_max_file_size>5</log_max_file_size>
 
     <!--log level: DEBUG < INFO < WARN < ERROR < NONE(don't print log)-->
-    <!-- <rpc_log_level>DEBUG</rpc_log_level>
-    <app_log_level>DEBUG</app_log_level> -->
-    <rpc_log_level>NONE</rpc_log_level>
-    <app_log_level>NONE</app_log_level>
+    <rpc_log_level>DEBUG</rpc_log_level>
+    <app_log_level>DEBUG</app_log_level>
+    <!-- <rpc_log_level>NONE</rpc_log_level>
+    <app_log_level>NONE</app_log_level> -->
 
     <!--inteval that put log info to async logger, ms-->
     <log_sync_inteval>500</log_sync_inteval>
@@ -45,7 +45,8 @@
 
   <server>
     <ip>127.0.0.1</ip>
-    <port>19999</port>
+    <!-- <port>19998</port> -->
+    <port>20000</port>
     <protocal>HTTP</protocal>
   </server>
 

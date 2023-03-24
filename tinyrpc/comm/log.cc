@@ -40,12 +40,19 @@ static std::atomic_int64_t g_app_log_index {0};
 void CoredumpHandler(int signal_no) {
   ErrorLog << "progress received invalid signal, will exit";
   printf("progress received invalid signal, will exit\n");
+  std::cout << "before flush" << std::endl;
   gRpcLogger->flush();
+  std::cout << "after flush" << std::endl;
   pthread_join(gRpcLogger->getAsyncLogger()->m_thread, NULL);
+  std::cout << "after gRpcLogger" << std::endl;
   pthread_join(gRpcLogger->getAsyncAppLogger()->m_thread, NULL);
 
+  std::cout << "pthread_join" << std::endl;
   signal(signal_no, SIG_DFL);
+  std::cout << "signal" << std::endl;
   raise(signal_no);
+  std::cout << "raise" << std::endl;
+
 }
 
 class Coroutine;
