@@ -47,6 +47,9 @@ class BlockCallHttpServlet : public tinyrpc::HttpServlet {
     AppDebugLog << "BlockCallHttpServlet end to call RPC";
 
     // 判断是否有框架级错误
+    std::cout << "-----------------------------------------" << std::endl;
+    std::cout << "Error Code: " << rpc_controller.ErrorCode() << std::endl;
+    std::cout << "-----------------------------------------" << std::endl;
     if (rpc_controller.ErrorCode() != 0) {
       AppDebugLog << "failed to call QueryServer rpc server";
       char buf[512];
@@ -120,6 +123,11 @@ public:
 
     async_channel->wait();
     AppDebugLog << "wait() back, now to check is rpc call succ";
+
+    std::cout << "-----------------------------------------" << std::endl;
+    std::cout << "Error Code: " << rpc_controller->ErrorCode() << std::endl;
+    std::cout << "Error Code: " << rpc_controller->ErrorText() << std::endl;
+    std::cout << "-----------------------------------------" << std::endl;
 
     if (rpc_controller->ErrorCode() != 0) {
       AppDebugLog << "failed to call QueryServer rpc server";
