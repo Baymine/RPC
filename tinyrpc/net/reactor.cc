@@ -18,6 +18,7 @@ extern write_fun_ptr_t g_sys_write_fun;  // sys write func
 
 namespace tinyrpc {
 
+// 
 static thread_local Reactor* t_reactor_ptr = nullptr;
 
 static thread_local int t_max_epoll_timeout = 10000;     // ms
@@ -207,7 +208,11 @@ void Reactor::delEventInLoopThread(int fd) {
 
 void Reactor::loop() {
 
+  // 确保在正确的线程上运行
   assert(isLoopThread());
+
+  // reactor已经启动，则返回
+  // 确保只有一个线程运行Reactor的事件循环（防止一个事件被分配到多个线程中）
   if (m_is_looping) {
     // DebugLog << "this reactor is looping!";
     return;
@@ -216,11 +221,11 @@ void Reactor::loop() {
   m_is_looping = true;
 	m_stop_flag = false;
 
-  Coroutine* first_coroutine = nullptr;
+  Coroutine* first_coroutine = nullptr; // 第一个要处理的协程
 
-	while(!m_stop_flag) {
+	while(!m_stop_flag) {  // 进入主循环
 		const int MAX_EVENTS = 10;
-		epoll_event re_events[MAX_EVENTS + 1];
+		epoll_event re_events[MAX_EVENTS + 1];  // epoll事件组
 
     if (first_coroutine) {
       tinyrpc::Coroutine::Resume(first_coroutine);

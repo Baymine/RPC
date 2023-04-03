@@ -23,9 +23,11 @@ static thread_local IOThread* t_cur_io_thread = nullptr;
 
 
 IOThread::IOThread() {
+  // block the main thread until the IOThread object has finished initializing
   int rt = sem_init(&m_init_semaphore, 0, 0);
   assert(rt==0);
 
+  // block the IO thread until the main thread is ready to start processing events.
   rt = sem_init(&m_start_semaphore, 0, 0);
   assert(rt==0);
 
@@ -120,6 +122,7 @@ IOThreadPool::IOThreadPool(int size) : m_size(size) {
 }
 
 void IOThreadPool::start() {
+  DebugLog << "m_size=" << m_size;
   for (int i = 0; i < m_size; ++i) {
     int rt = sem_post(m_io_threads[i]->getStartSemaphore());
     assert(rt == 0);
