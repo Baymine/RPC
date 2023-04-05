@@ -1,0 +1,15 @@
+syntax = "proto3";
+option cc_generic_services = true;
+
+message queryChatReq{
+    string prompt = 1;
+}
+
+message queryChatRes{
+    int32 ret_code = 1;
+    string res_info = 2;
+}
+
+service ChatGPTService{
+    rpc chatGPT(queryChatReq) returns (queryChatRes);
+}

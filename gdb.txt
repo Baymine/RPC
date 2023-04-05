@@ -1,0 +1,238 @@
+$8 = "\002\000\000\000G\000\000\000\024\071\060\066\061\061\064\067\067\066\061\061\065\061\066\066\070\062\063\070\065\000\000\000\026QueryService.query_age\000\000\000\000\000\000\000\000\020\220N\000\000\000\001\003"
+tinyrpc::TcpConnection::execute (this=0x555555818150) at tinyrpc/net/tcp/tcp_connection.cc:203
+$9 = std::shared_ptr<tinyrpc::TcpBuffer> (use count 1, weak count 0) = {
+  get() = 0x55555578ba30}
+$10 = {std::__shared_ptr<tinyrpc::TcpBuffer, (__gnu_cxx::_Lock_policy)2>::element_type *(const std::__shared_ptr<tinyrpc::TcpBuffer, (__gnu_cxx::_Lock_policy)2> * const)} 0x5555555e8338 <std::__shared_ptr<tinyrpc::TcpBuffer, (__gnu_cxx::_Lock_policy)2>::get() const>
+$11 = (std::__shared_ptr<tinyrpc::TcpBuffer, (__gnu_cxx::_Lock_policy)2>::element_type *) 0x55555578ba30
+$12 = {m_read_index = 0, m_write_index = 71, m_size = 0, 
+  m_buffer = std::vector of length 128, capacity 128 = {2 '\002', 0 '\000', 0 '\000', 
+    0 '\000', 71 'G', 0 '\000', 0 '\000', 0 '\000', 20 '\024', 57 '9', 48 '0', 54 '6', 
+    49 '1', 49 '1', 52 '4', 55 '7', 55 '7', 54 '6', 49 '1', 49 '1', 53 '5', 49 '1', 
+    54 '6', 54 '6', 56 '8', 50 '2', 51 '3', 56 '8', 53 '5', 0 '\000', 0 '\000', 
+    0 '\000', 22 '\026', 81 'Q', 117 'u', 101 'e', 114 'r', 121 'y', 83 'S', 101 'e', 
+    114 'r', 118 'v', 105 'i', 99 'c', 101 'e', 46 '.', 113 'q', 117 'u', 101 'e', 
+    114 'r', 121 'y', 95 '_', 97 'a', 103 'g', 101 'e', 0 '\000', 0 '\000', 0 '\000', 
+    0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 16 '\020', -112 '\220', 78 'N', 
+    0 '\000', 0 '\000', 0 '\000', 1 '\001', 3 '\003', 0 '\000', 0 '\000', 0 '\000', 
+    0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 
+    0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 
+    0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 
+    0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 
+    0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 
+    0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 
+    0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000', 0 '\000'}}
+$13 = tinyrpc::Http_Protocal
+$14 = (tinyrpc::TcpServer *) 0x55555578cd30
+$15 = std::shared_ptr<tinyrpc::AbstractCodeC> (use count 4, weak count 0) = {
+  get() = 0x5555557912e0}
+Couldn't find method tinyrpc::TcpClient::getCodec
+
+Thread 4 "test_http_serve" received signal SIGSEGV, Segmentation fault.
+0x00005555555a03d6 in std::__shared_ptr<tinyrpc::AbstractCodeC, (__gnu_cxx::_Lock_policy)2>::__shared_ptr (this=0x7fffdc6beb90) at /usr/include/c++/11/bits/shared_ptr_base.h:1152
+The program being debugged was signaled while in a function called from GDB.
+GDB remains in the frame where the signal was received.
+To change this behavior use "set unwindonsignal on".
+Evaluation of the expression containing the function
+(tinyrpc::TcpClient::getCodeC()) will be abandoned.
+When the function is done executing, GDB will silently stop.
+No symbol "m_tcp_cli" in current context.
+Undefined command: "m_codec->getProtocalType".  Try "help".
+No symbol "m_codec" in current context.
+tinyrpc::CoredumpHandler (signal_no=0) at tinyrpc/comm/log.cc:40
+
+Thread 2 "test_http_serve" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7ffff77ff640 (LWP 4606)]
+0x00007ffff7d4eb18 in std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) () from /lib/x86_64-linux-gnu/libstdc++.so.6
+Single stepping until exit from function _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC2ERKS4_,
+which has no line number information.
+
+Thread 3 "test_http_serve" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7ffff6ffe640 (LWP 4607)]
+0x00007ffff7d4eb18 in std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) () from /lib/x86_64-linux-gnu/libstdc++.so.6
+Single stepping until exit from function _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC2ERKS4_,
+which has no line number information.
+tinyrpc::CoredumpHandler (signal_no=0) at tinyrpc/comm/log.cc:40
+std::__shared_ptr_access<tinyrpc::Logger, (__gnu_cxx::_Lock_policy)2, false, false>::operator-> (this=0x555555776610 <tinyrpc::gRpcLogger>) at /usr/include/c++/11/bits/shared_ptr_base.h:987
+
+Thread 1 "test_http_serve" received signal SIGINT, Interrupt.
+[Switching to Thread 0x7ffff7e9a800 (LWP 4603)]
+0x00007ffff7925fde in epoll_wait (epfd=5, events=0x7fffffffe040, maxevents=10, timeout=10000) at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+Starting program: /mnt/文档/cpp/project/tinyrpc/bin/test_http_server ./conf/test_http_server.xml 
+warning: Source file is more recent than executable.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff77ff640 (LWP 5021)]
+[New Thread 0x7ffff6ffe640 (LWP 5022)]
+[New Thread 0x7ffff67fd640 (LWP 5023)]
+[Switching to Thread 0x7ffff67fd640 (LWP 5023)]
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x555555793f30, data=0x7fffec002430) at tinyrpc/net/http/http_codec.cc:66
+$16 = "GET /nonblock_query?id=1 HTTP/1.1\r\nHost: 127.0.0.1:20000\r\nUser-Agent: curl/7.81.0\r\nAccept: */*\r\n\r\n"
+tinyrpc::TcpConnection::execute (this=0x555555817360) at tinyrpc/net/tcp/tcp_connection.cc:203
+No symbol "m_connect_type" in current context.
+$17 = tinyrpc::TcpConnection::ServerConnection
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x555555793ff0, data=0x7fffec008ca0) at tinyrpc/net/http/http_codec.cc:66
+Ambiguous command "reverse": reverse-continue, reverse-finish, reverse-next, reverse-nexti, reverse-search, reverse-step...
+Target multi-thread does not support this command.
+  Id   Target Id                                          Frame 
+  1    Thread 0x7ffff7e9a800 (LWP 5006) "test_http_serve" 0x00007ffff7925fde in epoll_wait (epfd=5, events=0x7fffffffe040, maxevents=10, timeout=10000)
+    at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+  2    Thread 0x7ffff77ff640 (LWP 5021) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x555555790558)
+    at ./nptl/futex-internal.c:57
+  3    Thread 0x7ffff6ffe640 (LWP 5022) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555578dcec)
+    at ./nptl/futex-internal.c:57
+* 4    Thread 0x7ffff67fd640 (LWP 5023) "test_http_serve" tinyrpc::HttpCodeC::decode (
+    this=0x5555557912e0, buf=0x555555793ff0, data=0x7fffec008ca0)
+    at tinyrpc/net/http/http_codec.cc:66
+[Switching to thread 4 (Thread 0x7ffff67fd640 (LWP 5023))]
+#0  tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x555555793ff0, 
+    data=0x7fffec008ca0) at tinyrpc/net/http/http_codec.cc:66
+Ambiguous command "reverse-n": reverse-next, reverse-nexti.
+Target multi-thread does not support this command.
+$18 = "\002\000\000\000F\000\000\000\024\065\071\065\061\065\063\063\067\070\070\061\071\066\066\063\071\066\066\062\060\000\000\000\026QueryService.query_age\000\000\000\000\000\000\000\000\020\001\000\000\000\001\003"
+Starting program: /mnt/文档/cpp/project/tinyrpc/bin/test_http_server ./conf/test_http_server.xml 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff77ff640 (LWP 5189)]
+[New Thread 0x7ffff6ffe640 (LWP 5190)]
+[New Thread 0x7ffff67fd640 (LWP 5191)]
+[Switching to Thread 0x7ffff67fd640 (LWP 5191)]
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x5555557940a0, data=0x7fffec002110) at tinyrpc/net/http/http_codec.cc:66
+$19 = "GET /nonblock_query?id=1 HTTP/1.1\r\nHost: 127.0.0.1:20000\r\nUser-Agent: curl/7.81.0\r\nAccept: */*\r\n\r\n"
+tinyrpc::TcpConnection::execute (this=0x555555817360) at tinyrpc/net/tcp/tcp_connection.cc:203
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x555555816ed0, data=0x7fffec0089c0) at tinyrpc/net/http/http_codec.cc:66
+Starting program: /mnt/文档/cpp/project/tinyrpc/bin/test_http_server ./conf/test_http_server.xml 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff77ff640 (LWP 5319)]
+[New Thread 0x7ffff6ffe640 (LWP 5320)]
+[New Thread 0x7ffff67fd640 (LWP 5321)]
+[Switching to Thread 0x7ffff67fd640 (LWP 5321)]
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x555555793e20, data=0x7fffec002090) at tinyrpc/net/http/http_codec.cc:66
+tinyrpc::TcpConnection::execute (this=0x5555558172b0) at tinyrpc/net/tcp/tcp_connection.cc:203
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x555555817050, data=0x7fffec008b90) at tinyrpc/net/http/http_codec.cc:66
+  Id   Target Id                                          Frame 
+  1    Thread 0x7ffff7e9a800 (LWP 5307) "test_http_serve" 0x00007ffff7925fde in epoll_wait (epfd=5, events=0x7fffffffe040, maxevents=10, timeout=10000)
+    at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+  2    Thread 0x7ffff77ff640 (LWP 5319) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x555555790558)
+    at ./nptl/futex-internal.c:57
+  3    Thread 0x7ffff6ffe640 (LWP 5320) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555578dcec)
+    at ./nptl/futex-internal.c:57
+* 4    Thread 0x7ffff67fd640 (LWP 5321) "test_http_serve" tinyrpc::HttpCodeC::decode (
+    this=0x5555557912e0, buf=0x555555817050, data=0x7fffec008b90)
+    at tinyrpc/net/http/http_codec.cc:66
+Starting program: /mnt/文档/cpp/project/tinyrpc/bin/test_http_server ./conf/test_http_server.xml 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff77ff640 (LWP 5405)]
+[New Thread 0x7ffff6ffe640 (LWP 5406)]
+[New Thread 0x7ffff67fd640 (LWP 5407)]
+[Switching to Thread 0x7ffff67fd640 (LWP 5407)]
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x555555793e20, data=0x7fffec002090) at tinyrpc/net/http/http_codec.cc:66
+  Id   Target Id                                          Frame 
+  1    Thread 0x7ffff7e9a800 (LWP 5395) "test_http_serve" 0x00007ffff7925fde in epoll_wait (epfd=5, events=0x7fffffffe040, maxevents=10, timeout=10000)
+    at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+  2    Thread 0x7ffff77ff640 (LWP 5405) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555579055c)
+    at ./nptl/futex-internal.c:57
+  3    Thread 0x7ffff6ffe640 (LWP 5406) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555578dcec)
+    at ./nptl/futex-internal.c:57
+* 4    Thread 0x7ffff67fd640 (LWP 5407) "test_http_serve" tinyrpc::HttpCodeC::decode (
+    this=0x5555557912e0, buf=0x555555793e20, data=0x7fffec002090)
+    at tinyrpc/net/http/http_codec.cc:66
+tinyrpc::TcpConnection::execute (this=0x5555558172b0) at tinyrpc/net/tcp/tcp_connection.cc:203
+  Id   Target Id                                          Frame 
+  1    Thread 0x7ffff7e9a800 (LWP 5395) "test_http_serve" 0x00007ffff7925fde in epoll_wait (epfd=5, events=0x7fffffffe040, maxevents=10, timeout=10000)
+    at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+  2    Thread 0x7ffff77ff640 (LWP 5405) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555579055c)
+    at ./nptl/futex-internal.c:57
+  3    Thread 0x7ffff6ffe640 (LWP 5406) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555578dcec)
+    at ./nptl/futex-internal.c:57
+* 4    Thread 0x7ffff67fd640 (LWP 5407) "test_http_serve" tinyrpc::TcpConnection::execute (this=0x5555558172b0) at tinyrpc/net/tcp/tcp_connection.cc:203
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x5555557aa810, data=0x7fffec008bc0) at tinyrpc/net/http/http_codec.cc:66
+  Id   Target Id                                          Frame 
+  1    Thread 0x7ffff7e9a800 (LWP 5395) "test_http_serve" 0x00007ffff7925fde in epoll_wait (epfd=5, events=0x7fffffffe040, maxevents=10, timeout=10000)
+    at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+  2    Thread 0x7ffff77ff640 (LWP 5405) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x555555790558)
+    at ./nptl/futex-internal.c:57
+  3    Thread 0x7ffff6ffe640 (LWP 5406) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555578dcec)
+    at ./nptl/futex-internal.c:57
+* 4    Thread 0x7ffff67fd640 (LWP 5407) "test_http_serve" tinyrpc::HttpCodeC::decode (
+    this=0x5555557912e0, buf=0x5555557aa810, data=0x7fffec008bc0)
+    at tinyrpc/net/http/http_codec.cc:66
+Starting program: /mnt/文档/cpp/project/tinyrpc/bin/test_http_server ./conf/test_http_server.xml 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff77ff640 (LWP 5834)]
+[New Thread 0x7ffff6ffe640 (LWP 5835)]
+[New Thread 0x7ffff67fd640 (LWP 5836)]
+[Switching to Thread 0x7ffff67fd640 (LWP 5836)]
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x555555793f30, data=0x7fffec002110) at tinyrpc/net/http/http_codec.cc:66
+  Id   Target Id                                          Frame 
+  1    Thread 0x7ffff7e9a800 (LWP 5820) "test_http_serve" 0x00007ffff7925fde in epoll_wait (epfd=5, events=0x7fffffffe040, maxevents=10, timeout=10000)
+    at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+  2    Thread 0x7ffff77ff640 (LWP 5834) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555579055c)
+    at ./nptl/futex-internal.c:57
+  3    Thread 0x7ffff6ffe640 (LWP 5835) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555578dcec)
+    at ./nptl/futex-internal.c:57
+* 4    Thread 0x7ffff67fd640 (LWP 5836) "test_http_serve" tinyrpc::HttpCodeC::decode (
+    this=0x5555557912e0, buf=0x555555793f30, data=0x7fffec002110)
+    at tinyrpc/net/http/http_codec.cc:66
+Run till exit from #0  tinyrpc::HttpCodeC::decode (this=0x5555557912e0, 
+    buf=0x555555793f30, data=0x7fffec002110) at tinyrpc/net/http/http_codec.cc:99
+tinyrpc::TcpConnection::execute (this=0x555555817360) at tinyrpc/net/tcp/tcp_connection.cc:203
+  Id   Target Id                                          Frame 
+  1    Thread 0x7ffff7e9a800 (LWP 5820) "test_http_serve" 0x00007ffff7925fde in epoll_wait (epfd=5, events=0x7fffffffe040, maxevents=10, timeout=10000)
+    at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+  2    Thread 0x7ffff77ff640 (LWP 5834) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x555555790558)
+    at ./nptl/futex-internal.c:57
+  3    Thread 0x7ffff6ffe640 (LWP 5835) "test_http_serve" __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x55555578dcec)
+    at ./nptl/futex-internal.c:57
+* 4    Thread 0x7ffff67fd640 (LWP 5836) "test_http_serve" tinyrpc::TcpConnection::execute (this=0x555555817360) at tinyrpc/net/tcp/tcp_connection.cc:211
+tinyrpc::TcpServer::getDispatcher (this=0x55555578cd30) at tinyrpc/net/tcp/tcp_server.cc:300
+std::shared_ptr<tinyrpc::AbstractDispatcher>::shared_ptr (this=0x7fffdc67ec70) at /usr/include/c++/11/bits/shared_ptr.h:150
+std::__shared_ptr<tinyrpc::AbstractDispatcher, (__gnu_cxx::_Lock_policy)2>::__shared_ptr (this=0x7fffdc67ec70) at /usr/include/c++/11/bits/shared_ptr_base.h:1152
+std::__shared_count<(__gnu_cxx::_Lock_policy)2>::__shared_count (this=0x7fffdc67ec78, __r=...) at /usr/include/c++/11/bits/shared_ptr_base.h:709
+std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_add_ref_copy (this=0x55555578ab80) at /usr/include/c++/11/bits/shared_ptr_base.h:148
+Run till exit from #0  std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_add_ref_copy (this=0x55555578ab80) at /usr/include/c++/11/bits/shared_ptr_base.h:148
+std::__shared_count<(__gnu_cxx::_Lock_policy)2>::__shared_count (this=0x7fffdc67ec78, __r=...) at /usr/include/c++/11/bits/shared_ptr_base.h:713
+Run till exit from #0  std::__shared_count<(__gnu_cxx::_Lock_policy)2>::__shared_count
+    (this=0x7fffdc67ec78, __r=...) at /usr/include/c++/11/bits/shared_ptr_base.h:713
+0x00005555555a0391 in std::__shared_ptr<tinyrpc::AbstractDispatcher, (__gnu_cxx::_Lock_policy)2>::__shared_ptr (this=0x7fffdc67ec70) at /usr/include/c++/11/bits/shared_ptr_base.h:1152
+Run till exit from #0  0x00005555555a0391 in std::__shared_ptr<tinyrpc::AbstractDispatcher, (__gnu_cxx::_Lock_policy)2>::__shared_ptr (this=0x7fffdc67ec70)
+    at /usr/include/c++/11/bits/shared_ptr_base.h:1152
+0x00005555555a03bb in std::shared_ptr<tinyrpc::AbstractDispatcher>::shared_ptr (this=0x7fffdc67ec70) at /usr/include/c++/11/bits/shared_ptr.h:150
+Run till exit from #0  0x00005555555a03bb in std::shared_ptr<tinyrpc::AbstractDispatcher>::shared_ptr (this=0x7fffdc67ec70) at /usr/include/c++/11/bits/shared_ptr.h:150
+tinyrpc::TcpServer::getDispatcher (this=0x55555578cd30) at tinyrpc/net/tcp/tcp_server.cc:301
+std::__shared_ptr_access<tinyrpc::AbstractDispatcher, (__gnu_cxx::_Lock_policy)2, false, false>::operator-> (this=0x7fffdc67ec70) at /usr/include/c++/11/bits/shared_ptr_base.h:987
+Run till exit from #0  std::__shared_ptr_access<tinyrpc::AbstractDispatcher, (__gnu_cxx::_Lock_policy)2, false, false>::operator-> (this=0x7fffdc67ec70)
+    at /usr/include/c++/11/bits/shared_ptr_base.h:987
+0x00005555555e5514 in tinyrpc::TcpConnection::execute (this=0x555555817360) at tinyrpc/net/tcp/tcp_connection.cc:211
+Value returned is $20 = (std::__shared_ptr_access<tinyrpc::AbstractDispatcher, (__gnu_cxx::_Lock_policy)2, false, false>::element_type *) 0x55555578ab90
+std::__shared_ptr<tinyrpc::AbstractData, (__gnu_cxx::_Lock_policy)2>::get (this=0x7fffdc67ec50) at /usr/include/c++/11/bits/shared_ptr_base.h:1296
+
+Thread 4 "test_http_serve" hit Breakpoint 1, tinyrpc::HttpCodeC::decode (this=0x5555557912e0, buf=0x555555816dc0, data=0x7fffec008930) at tinyrpc/net/http/http_codec.cc:66
+$21 = "\002\000\000\000F\000\000\000\024\071\070\071\065\067\062\061\067\065\063\067\060\070\065\071\062\062\062\065\065\000\000\000\026QueryService.query_age\000\000\000\000\000\000\000\000\020\001\000\000\000\001\003"
+Run till exit from #0  tinyrpc::HttpCodeC::decode (this=0x5555557912e0, 
+    buf=0x555555816dc0, data=0x7fffec008930) at tinyrpc/net/http/http_codec.cc:66
+tinyrpc::TcpConnection::execute (this=0x555555818330) at tinyrpc/net/tcp/tcp_connection.cc:203
+$22 = (tinyrpc::TcpServer *) 0x55555578cd30
+$23 = std::shared_ptr<tinyrpc::AbstractCodeC> (use count 4, weak count 0) = {
+  get() = 0x5555557912e0}
+$24 = (tinyrpc::TcpClient *) 0x0
+
+Thread 4 "test_http_serve" received signal SIGSEGV, Segmentation fault.
+0x00005555555a03d6 in std::__shared_ptr<tinyrpc::AbstractCodeC, (__gnu_cxx::_Lock_policy)2>::__shared_ptr (this=0x7fffdc6feb90) at /usr/include/c++/11/bits/shared_ptr_base.h:1152
+The program being debugged was signaled while in a function called from GDB.
+GDB remains in the frame where the signal was received.
+To change this behavior use "set unwindonsignal on".
+Evaluation of the expression containing the function
+(tinyrpc::TcpClient::getCodeC()) will be abandoned.
+When the function is done executing, GDB will silently stop.

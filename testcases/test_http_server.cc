@@ -21,7 +21,7 @@
 
 using namespace tinyrpc;
 
-char* kHtml = "<html><body><h1>Welcome to TinyRPC, just enjoy it!</h1><p>%s</p></body></html>";
+const char* kHtml = "<html><body><h1>Welcome to TinyRPC, just enjoy it!</h1><p>%s</p></body></html>";
 
 IPAddress::ptr addr = std::make_shared<IPAddress>("127.0.0.1", 20000);
 
@@ -32,8 +32,8 @@ class QueryServlet : public HttpServlet {
   ~QueryServlet() override = default;
 
   void handle(HttpRequest* req, HttpResponse* res) override {
-    setHttpCode(res, HTTP_OK);
-    setHttpContentType(res, "text/html;charset=utf-8");
+    setHttpCode(res, HTTP_OK);    // HTTP status code
+    setHttpContentType(res, "text/html;charset=utf-8");  // content type of the response
 
     std::stringstream ss;
     ss << "QueryServlet: received ID " << req->m_query_maps["id"];
@@ -169,23 +169,23 @@ int main(int argc, char* argv[]) {
     return 0;
     }
 
-    auto readHTMLFile = [](std::string&& fileName){
-      std::ifstream file(fileName);
-      if(!file.is_open()){
-        std::cerr << "Fail to open file" << std::endl;
-        return 1;
-      }
-      file.seekg(0, std::ios::end);
-      std::streamsize length = file.tellg();
-      file.seekg(0, std::ios::beg);
+    // auto readHTMLFile = [](std::string&& fileName){
+    //   std::ifstream file(fileName);
+    //   if(!file.is_open()){
+    //     std::cerr << "Fail to open file" << std::endl;
+    //     return 1;
+    //   }
+    //   file.seekg(0, std::ios::end);
+    //   std::streamsize length = file.tellg();
+    //   file.seekg(0, std::ios::beg);
 
-      kHtml = new char[length];
-      file.read(kHtml, length);
-      file.close();
-      return;
-    };
+    //   kHtml = new char[length];
+    //   file.read(kHtml, length);
+    //   file.close();
+    //   return 0;
+    // };
 
-    readHTMLFile("./index.html");
+    // readHTMLFile("./index.html");
     InitConfig(argv[1]);
 
     REGISTER_HTTP_SERVLET("/query", QueryServlet);

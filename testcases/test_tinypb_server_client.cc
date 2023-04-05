@@ -11,7 +11,7 @@ void test_client()
 {
 
     // tinyrpc::IPAddress::ptr addr = std::make_shared<tinyrpc::IPAddress>("127.0.0.1", 39998);
-    tinyrpc::IPAddress::ptr addr = std::make_shared<tinyrpc::IPAddress>("127.0.0.1", 20000);
+    tinyrpc::IPAddress::ptr addr = std::make_shared<tinyrpc::IPAddress>("127.0.0.1", 19999);
 
     tinyrpc::TinyPbRpcChannel channel(addr);
     QueryService_Stub stub(&channel);
@@ -25,12 +25,17 @@ void test_client()
     std::cout << "Send to tinyrpc server " << addr->toString() << ", requeset body: " << rpc_req.ShortDebugString() << std::endl;
     stub.query_age(&rpc_controller, &rpc_req, &rpc_res, NULL);
 
+    queryNameReq rpc_name_req;
+    queryNameRes rpc_name_res;
+    stub.query_name(&rpc_controller, &rpc_name_req, &rpc_name_res, NULL);
+
     if (rpc_controller.ErrorCode() != 0) {
         std::cout << "Failed to call tinyrpc server, error code: " << rpc_controller.ErrorCode() << ", error info: " << rpc_controller.ErrorText() << std::endl;
         return;
     }
 
     std::cout << "Success get response frrom tinyrpc server " << addr->toString() << ", response body: " << rpc_res.ShortDebugString() << std::endl;
+    std::cout << "Name request: " << rpc_name_res.ShortDebugString() << std::endl;
 }
 
 int main(int argc, char *argv[])

@@ -39,10 +39,17 @@ PATH_INSTALL_INC_TINYPB = $(PATH_INSTALL_INC_ROOT)/$(PATH_TINYPB)
 CXX := g++
 
 CXXFLAGS += -g -O0 -std=c++11 -Wall -Wno-deprecated -Wno-unused-but-set-variable 
+#----------------------------
+CXXFLAGS += -Werror -lpython3.10 -I/usr/include/python3.10
+
+LDFLAGS = -lpython3.10  -I/usr/include/python3.10 
+#----------------------------
 # add lib plugin
 # CXXFLAGS += -g -O0 -std=c++11 -Wall -Wno-deprecated -Wno-unused-but-set-variable -D DECLARE_MYSQL_PLUGIN
 CXXFLAGS += -I./ -I$(PATH_TINYRPC)	-I$(PATH_COMM) -I$(PATH_COROUTINE) -I$(PATH_NET) -I$(PATH_HTTP) -I$(PATH_TCP) -I$(PATH_TINYPB)
 # CXXFLAGS += -I./ -I$(PATH_TINYRPC)	-I$(PATH_COMM) -I$(PATH_COROUTINE) -I$(PATH_NET) -I$(PATH_HTTP) -I$(PATH_TCP) -I$(PATH_TINYPB)
+
+
 
 LIBS += /usr/lib/libprotobuf.a	/usr/lib/libtinyxml.a
 
@@ -60,11 +67,19 @@ TINYPB_OBJ := $(patsubst $(PATH_TINYPB)/%.cc, $(PATH_OBJ)/%.o, $(wildcard $(PATH
 
 COR_CTX_SWAP := coctx_swap.o
 
-ALL_TESTS : $(PATH_BIN)/test_tinypb_server $(PATH_BIN)/test_http_server $(PATH_BIN)/test_coroutine $(PATH_BIN)/test_tinypb_server_client\
+ALL_TESTS : $(PATH_BIN)/test_tinypb_server $(PATH_BIN)/test_http_server $(PATH_BIN)/test_coroutine $(PATH_BIN)/test_tinypb_server_client $(PATH_BIN)/chat_client $(PATH_BIN)/chat_server\
 
-TEST_CASE_OUT := $(PATH_BIN)/test_tinypb_server $(PATH_BIN)/test_http_server $(PATH_BIN)/test_tinypb_server_client\
+TEST_CASE_OUT := $(PATH_BIN)/test_tinypb_server $(PATH_BIN)/test_http_server $(PATH_BIN)/test_tinypb_server_client $(PATH_BIN)/chat_client $(PATH_BIN)/chat_server\
 
 LIB_OUT := $(PATH_LIB)/libtinyrpc.a
+
+
+$(PATH_BIN)/chat_server: $(LIB_OUT)
+	$(CXX) $(CXXFLAGS) $(PATH_TESTCASES)/chat_server.cc $(PATH_TESTCASES)/test_chatGPT.pb.cc -o $@ $(LIB_OUT) $(LIBS) -ldl -lprotobuf -pthread $(PLUGIN_LIB) $(LDFLAGS) -lcurl
+
+$(PATH_BIN)/chat_client: $(LIB_OUT)
+	$(CXX) $(CXXFLAGS) $(PATH_TESTCASES)/chat_client.cc $(PATH_TESTCASES)/test_chatGPT.pb.cc -o $@ $(LIB_OUT) $(LIBS) -ldl -lprotobuf -pthread $(PLUGIN_LIB)
+
 
 $(PATH_BIN)/test_tinypb_server: $(LIB_OUT)
 	$(CXX) $(CXXFLAGS) $(PATH_TESTCASES)/test_tinypb_server.cc $(PATH_TESTCASES)/test_tinypb_server.pb.cc -o $@ $(LIB_OUT) $(LIBS) -ldl -lprotobuf -pthread $(PLUGIN_LIB)
