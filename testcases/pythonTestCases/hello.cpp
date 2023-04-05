@@ -1,10 +1,12 @@
 // #include "openai.hpp"
 #include <iostream>
+#include <map>
+#include <string>
 #include "include/openai/openai.hpp"
 
 int main() {
-    openai::start(); // Will use the api key provided by `OPENAI_API_KEY` environment variable
-    // openai::start("your_API_key", "optional_organization"); // Or you can handle it yourself
+    // openai::start(); // Will use the api key provided by `OPENAI_API_KEY` environment variable
+    openai::start(); // Or you can handle it yourself
 
     // std::string prompt = "Write an buble sort in C++";
     // auto completion = openai::completion().create(R"({
@@ -13,15 +15,26 @@ int main() {
     //     "max_tokens": 7,
     //     "temperature": 0
     // })"_json); // Using user-defined (raw) string literals
+    
+    // std::string prompt = R"({
+    //     "model": "text-davinci-003",
+    //     "prompt": "Say this is a test",
+    //     "max_tokens": 7,
+    //     "temperature": 0
+    // })";
 
-    std::string prompt = R"({
-        "model": "text-davinci-003",
-        "prompt": "Say this is a test",
-        "max_tokens": 7,
-        "temperature": 0
-    })";
+    std::string t = R"("Say this is a test")";
 
-    auto completion = openai::completion().create(nlohmann::json::parse(prompt));
+    nlohmann::json prompt = {
+        {"model", "text-davinci-003"}, 
+        {"prompt", t}, 
+        {"max_tokens", 7},
+        {"temperature", 0}
+    };
+
+    auto completion = openai::completion().create(prompt);
+
+    // auto completion = openai::completion().create(nlohmann::json::parse(prompt));
 
 
 
