@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
     printf("./server a.xml\n");
     return 0;
   }
-  openai::start("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");
+  openai::start();
 
   // 1. 读取配置文件
   tinyrpc::InitConfig(argv[1]);
