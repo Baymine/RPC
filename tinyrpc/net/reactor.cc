@@ -256,6 +256,8 @@ void Reactor::loop() {
     lock.unlock();
 
     // 执行任务队列中的所有任务
+    // 处理上一次中，pending的任务
+    // 这样可以提高任务的相应速度，同时部分的任务处理后可以将占用的资源释放，
 		for (size_t i = 0; i < tmp_tasks.size(); ++i) {
 			// DebugLog << "begin to excute task[" << i << "]";
 			if (tmp_tasks[i]) {

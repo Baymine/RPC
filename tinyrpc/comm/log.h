@@ -116,6 +116,8 @@ class LogTmp {
 
 };
 
+// This design ensures that the logging process doesn't block main application thread, allowing it to continue executing 
+// its tasks while the logger thread takes care of writing the logs. 
 class AsyncLogger {
  public:
   typedef std::shared_ptr<AsyncLogger> ptr;
@@ -123,10 +125,13 @@ class AsyncLogger {
 	AsyncLogger(const char* file_name, const char* file_path, int max_size, LogType logtype);
 	~AsyncLogger();
 
+	// add a new task to the tasks queue
 	void push(std::vector<std::string>& buffer);
 
+	// Forces the logger to write all pending tasks to the log file
 	void flush();
 
+	// 
 	static void* excute(void*);
 
 	void stop();
@@ -139,7 +144,7 @@ class AsyncLogger {
 	const char* m_file_path;
 	int m_max_size {0};
 	LogType m_log_type;
-	int m_no {0};
+	int m_no {0};   // A number used to differentiate log files when creating new ones due to size limit.
 	bool m_need_reopen {false};
 	FILE* m_file_handle {nullptr};
 	std::string m_date;
