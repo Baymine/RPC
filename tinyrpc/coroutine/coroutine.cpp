@@ -116,6 +116,7 @@ namespace tinyrpc
             ErrorLog << "main coroutine can't set callback";
             return false;
         }
+        // 
         if (m_is_in_cofunc)
         {
             ErrorLog << "this coroutine is in CoFunction";
