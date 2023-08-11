@@ -24,19 +24,19 @@ using namespace tinyrpc;
 const char* kHtml = "<html><body><h1>Welcome to TinyRPC, just enjoy it!</h1><p>%s</p></body></html>";
 
 
-std::ifstream htmlFile("./index.html")
-ringstream ss;
-if(!htmlFile.is_open()){
-  ss << "Fail to open the html file\n";
-  AppDebugLog << ss.str();
-} else{
-  stringstream buffer;
-  buffer << htmlFile.rdbuf();
-  kHtml = buffer.str();
+// std::ifstream htmlFile("./index.html");
+// if(!htmlFile.is_open()){
+//   stringstream ss;
+//   ss << "Fail to open the html file\n";
+//   AppDebugLog << ss.str();
+// } else{
+//   stringstream buffer;
+//   buffer << htmlFile.rdbuf();
+//   kHtml = buffer.str();
 
-  htmlFile.close(); 
+//   htmlFile.close(); 
 
-}
+// }
 
 
 IPAddress::ptr addr = std::make_shared<IPAddress>("127.0.0.1", 20000);
