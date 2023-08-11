@@ -42,7 +42,7 @@ namespace tinyrpc{
 
     enum LogType{
         RPC_LOG = 1,
-        APP_log = 2,
+        APP_LOG = 2,
     };
 
 
@@ -109,7 +109,90 @@ namespace tinyrpc{
 
     private:
         LogEvent::ptr m_event;
-    }
-};
+    };
+
+    class AsyncLogger{
+    public:
+        typedef std::shared_ptr<AsyncLogger> ptr;
+
+        AsyncLogger(const char* file_name, const char* file_path, int max_size, LogType logtype);
+        ~AsyncLogger();
+
+        void push(std::vector<std::string>& buffer);
+
+        void flush();
+
+        static void* execute(void*);
+
+        void stop();
+
+    public:
+        std::queue<std::vector<std::string>> m_tasks;
+
+    private:
+        const char* m_file_name;
+        const char* m_file_path;
+        int m_max_size{0};
+        LogType m_logtype;
+        int m_no{0};
+        bool m_need_handle{false};
+        bool m_need_reopen {false};
+        FILE* m_file_handle{nullptr};
+        std::string m_date;
+
+        Mutex m_mutex;
+        pthread_cond_t m_condition;
+        bool m_stop{false};
+
+    public:
+        pthread_t m_thread;
+        sem_t m_semaphore;
+    };
+
+    class Logger{
+    public:
+        typedef std::shared_ptr<Logger> ptr;
+        Logger();
+        ~Logger();
+
+        void init(const char* file_name, const char* file_path, int max_size, int sync_inteval);
+
+        void log();
+
+        void pushRpcLog(const std::string& log_msg);
+
+        void pushAppLog(const std::string& log_msg);
+
+        void loopFunc();
+
+        void flush();
+
+        void start();
+
+        AsyncLogger::ptr getAsyncLogger(){
+            return m_async_rpc_logger;
+        }
+
+        AsyncLogger::ptr getAsyncAppLogger(){
+            return m_async_app_logger;
+        }
+
+    public:
+        std::vector<std::string> m_buffer;
+        std::vector<std::string> m_app_buffer;
+
+    private:
+        Mutex m_app_buffer_mutex;
+        Mutex m_buff_mutex;
+        bool m_is_init{false};
+        AsyncLogger::ptr m_async_rpc_logger;
+        AsyncLogger::ptr m_async_app_logger;
+
+        int m_sync_inteval{0};
+    };
+
+    void Exit(int code);
+}
+
 
 #endif

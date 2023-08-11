@@ -18,7 +18,7 @@
 #endif
 
 
-#include "tinyrpc/comm/log.h"
+#include "./log.h"
 #include "tinyrpc/comm/config.h"
 #include "tinyrpc/comm/run_time.h"
 #include "tinyrpc/coroutine/coroutine.h"
@@ -236,11 +236,23 @@ namespace tinyrpc{
         Reactor::GetReactor()->getTimer()->addTimerEvent(event);
     }
 
+    /**
+     * Loop function for the Logger class.
+     * Push the log information into the logger.
+     * 
+     * 1. Reduces the lock time, reducing the risk of deadlock.
+     * 2. Implements the double buffer design pattern.
+     *
+     * @throws None
+     */
     void Logger::loopFunc(){
         std::vector<std::string>app_tmp;
 
-        Mutex::Lock lock1(m_app_buff_mutex);
-        app_tmp.swap(m_app_buffer);
+
+        // 1. reduce the lock time, reduce the risk of deadlock
+        // 2. the double buffer design pattern
+        Mutex::Lock lock1(m_app_buffer_mutex);
+        app_tmp.swap(m_app_buffer);  // swap the pointer only, very effective
         lock1.unlock();
 
         std::vector<std::string>tmp;
@@ -253,11 +265,151 @@ namespace tinyrpc{
         
     }
 
+    void Logger::pushRpcLog(const std::string& msg){
+        Mutex::Lock lock(m_buff_mutex);
+        m_buffer.push_back(msg);
+        lock.unlock();
+    }
 
+    void Logger::pushAppLog(const std::string& msg){
+        Mutex::Lock lock(m_app_buffer_mutex);
+        m_app_buffer.push_back(msg);
+        lock.unlock();
+    }
 
+    void Logger::flush(){
+        loopFunc();
+        m_async_rpc_logger->stop();
+        m_async_rpc_logger->flush();
 
+        m_async_app_logger->stop();
+        m_async_app_logger->flush();
+    }
 
-    void AsyncLogger::push(const std::string& buffer){
-        
+    AsyncLogger::AsyncLogger(const char* file_name, const char* file_path, int max_size, LogType type) : 
+        m_file_name(file_name), m_file_path(file_path), m_max_size(max_size), m_logtype(type) {
+        int rt = sem_init(&m_semaphore, 0, 0);
+        assert(rt == 0);
+
+        rt = pthread_create(&m_thread, nullptr, &AsyncLogger::execute, this);
+        assert(rt == 0);
+        rt = sem_wait(&m_semaphore);  // block the current thread
+        assert(rt == 0);
+    }
+
+    AsyncLogger::~AsyncLogger(){  }
+    
+    void* AsyncLogger::execute(void* arg){
+        AsyncLogger* ptr = reinterpret_cast<AsyncLogger*>(arg);
+        int rt = pthread_cond_init(&ptr->m_condition, nullptr);
+        assert(rt == 0);
+
+        rt = sem_post(&ptr->m_semaphore);
+        assert(rt == 0);
+
+        while(1){
+            Mutex::Lock lock(ptr->m_mutex);
+
+            while(ptr->m_tasks.empty() && !ptr->m_stop){
+                // why here need a mutex?
+                pthread_cond_wait(&ptr->m_condition, ptr->m_mutex.getMutex());
+            }
+            std::vector<std::string> tmp;
+            tmp.swap(ptr->m_tasks.front());
+            ptr->m_tasks.pop();
+            bool is_stop = ptr->m_stop;
+            lock.unlock();
+
+            timeval now;
+            gettimeofday(&now, nullptr);
+
+            struct tm now_time;
+            localtime_r(&(now.tv_sec), &now_time);
+
+            const char* format = "%Y-%m-%d %H:%M:%S";
+            char date[32];
+            strftime(date, sizeof(date), format, &now_time);
+            if(ptr->m_date != std::string(date)){
+                ptr->m_no = 0;
+                ptr->m_date = std::string(date);
+                ptr->m_need_reopen = true;
+            }
+
+            if(!ptr->m_file_handle) ptr->m_need_handle = true;
+
+            std::stringstream ss;
+            ss << ptr->m_file_path << ptr->m_file_name << "_" << ptr->m_date << "_" << 
+                LogTypeToString(ptr->m_logtype) << "_" << ptr->m_no << ".log";
+            std::string full_file_name = ss.str();
+
+            if(ptr->m_need_reopen){
+                if(ptr->m_file_handle) fclose(ptr->m_file_handle);
+                ptr->m_file_handle = fopen(full_file_name.c_str(), "a");
+                ptr->m_need_reopen = false;
+            }
+
+            if(ftell(ptr->m_file_handle) > ptr->m_max_size){
+                fclose(ptr->m_file_handle);
+
+                ptr->m_no++;
+                std::stringstream ss2;
+                ss2 << ptr->m_file_path << ptr->m_file_name << "_" << ptr->m_date << "_" << 
+                    LogTypeToString(ptr->m_logtype) << "_" << ptr->m_no << ".log";
+                full_file_name = ss2.str();
+
+                // what does this char "a" used for?
+                ptr->m_file_handle = fopen(full_file_name.c_str(), "a"); 
+                ptr->m_need_reopen = false;
+            }
+            if(!ptr->m_file_handle){
+                printf("open log file %s error!", full_file_name.c_str());
+            }
+
+            // add &: is this okay?
+            for(auto& s : tmp){
+                if(!s.empty()){
+                    fwrite(s.c_str(), 1, s.length(), ptr->m_file_handle);
+                }
+            }
+            tmp.clear();
+            fflush(ptr->m_file_handle);
+            if(is_stop) break;
+        }
+        if(!ptr->m_file_handle) fclose(ptr->m_file_handle);
+        return nullptr;
+    }
+
+    /**
+     * Pushes a vector of strings into the buffer of the AsyncLogger.
+     * It's the producer in a producer-consumer pattern
+     *
+     * @param buffer batch processing the log information
+     *
+     * @throws None
+     */
+    void AsyncLogger::push(std::vector<std::string>& buffer){
+        if(!buffer.empty()){
+            Mutex::Lock lock(m_mutex);
+            m_tasks.push(buffer);
+            lock.unlock();
+            pthread_cond_signal(&m_condition);   //  waking up a waiting consumer
+        }   
+    }
+
+    void AsyncLogger::flush(){
+        if(m_file_handle) fflush(m_file_handle);
+    }
+    
+    /**
+     * gracefully shut down:
+     * Instead of abruptly stopping operations, which might cause errors,
+     * data loss, or other issues, a graceful shutdown ensures that all 
+     * necessary cleanup and finalization tasks are performed.
+    */
+    void AsyncLogger::stop(){
+        if(!m_stop){  // 保证幂等操作
+            m_stop = true;
+            pthread_cond_signal(&m_condition);
+        }
     }
 }
