@@ -195,12 +195,11 @@ void TcpConnection::execute() {
     std::stringstream ss;
     for(auto c : m_read_buffer.get()->m_buffer){
       std::string s = std::string(1, c);
-      ss << s;
+      ss << s << "\n";
     }
     DebugLog << ss.str();
     DebugLog << "=====================================";
     m_codec->decode(m_read_buffer.get(), data.get());  // 将解码后的数据放到对应的data变量中存储起来
-    std::cout << "Pasing data in process. The result: " << data->decode_succ << std::endl;
     if (!data->decode_succ) {
       ErrorLog << "it parse request error of fd " << m_fd;
       break;

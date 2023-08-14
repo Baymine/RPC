@@ -60,6 +60,7 @@ void HttpCodeC::decode(TcpBuffer* buf, AbstractData* data) {
   // bool is_parse_succ = false;
   int read_size = 0;
   std::string tmp(strs);
+  printf("tmp:%s\n", tmp.c_str());
   DebugLog << "pending to parse str:" << tmp << ", total size =" << tmp.size();
   int len = tmp.length();
   while (1) {

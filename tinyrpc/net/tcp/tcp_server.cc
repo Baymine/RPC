@@ -218,6 +218,7 @@ namespace tinyrpc
     {
         if (m_protocal_type == Http_Protocal) {
             if (servlet) {
+                // 建立一个从url_path到servlet的映射
                 dynamic_cast<HttpDispacther *>(m_dispatcher.get())->registerServlet(url_path, servlet);
             } else {
                 ErrorLog << "register http servlet error, servlet ptr is nullptr";
