@@ -34,7 +34,7 @@ IOThread::IOThread() {
   // main: 线程创建之后执行的操作，this：传入main的参数
   pthread_create(&m_thread, nullptr, &IOThread::main, this);
 
-  DebugLog << "semaphore begin to wait until new thread frinish IOThread::main() to init";
+  DebugLog << "semaphore begin to wait until new thread finish IOThread::main() to init";
   // wait until new thread finish IOThread::main() func to init 
   rt = sem_wait(&m_init_semaphore);   // -1
   assert(rt == 0);
@@ -84,7 +84,7 @@ void* IOThread::main(void* arg) {
   t_reactor_ptr = new Reactor();
   assert(t_reactor_ptr != NULL);
 
-  IOThread* thread = static_cast<IOThread*>(arg);
+  IOThread* thread = static_cast<IOThread*>(arg);  // input this, which is IOThread.
   t_cur_io_thread = thread;
   thread->m_reactor = t_reactor_ptr;
   thread->m_reactor->setReactorType(SubReactor);
@@ -97,7 +97,7 @@ void* IOThread::main(void* arg) {
   sem_post(&thread->m_init_semaphore);  // it increments the value of the semaphore
 
   // wait for main thread post m_start_semaphore to start iothread loop
-  sem_wait(&thread->m_start_semaphore);
+  sem_wait(&thread->m_start_semaphore);  // TODO：where this semaphore is posted?
 
   sem_destroy(&thread->m_start_semaphore);
 

@@ -140,7 +140,9 @@ void TinyPbRpcDispacther::dispatch(AbstractData* data, TcpConnection* conn) {
 
 }
 
-
+/**
+ * 字符串解析
+*/
 bool TinyPbRpcDispacther::parseServiceFullName(const std::string& full_name, std::string& service_name, std::string& method_name) {
   if (full_name.empty()) {
     ErrorLog << "service_full_name empty";

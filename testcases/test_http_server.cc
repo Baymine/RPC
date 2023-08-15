@@ -62,6 +62,7 @@ class QueryServlet : public HttpServlet {
 
     TinyPbRpcController rpc_controller;
     TinyPbRpcChannel channel(addr);
+    rpc_controller.SetTimeout(50000);
 
     QueryService_Stub stub(&channel);
     stub.query_age(&rpc_controller, &rpc_req, rpc_res.get(), nullptr);
@@ -204,6 +205,7 @@ int main(int argc, char* argv[]) {
     // readHTMLFile("./index.html");
     InitConfig(argv[1]);
 
+    // std::map<std::string, tinyrpc::HttpServlet::ptr>
     REGISTER_HTTP_SERVLET("/query", QueryServlet);
     REGISTER_HTTP_SERVLET("/nonblock_query", NonBlockQueryServlet);
     REGISTER_HTTP_SERVLET("/echo", EchoServlet);
