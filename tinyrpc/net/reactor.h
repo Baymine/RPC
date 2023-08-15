@@ -81,7 +81,7 @@ class Reactor {
 
   Mutex m_mutex;                    // mutex
   
-  std::vector<int> m_fds;              // alrady care events
+  std::vector<int> m_fds;              // already registered events
   std::atomic<int> m_fd_size; 
 
   // fds that wait for operate

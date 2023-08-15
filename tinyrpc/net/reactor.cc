@@ -206,6 +206,9 @@ void Reactor::delEventInLoopThread(int fd) {
 }
 
 
+/*
+1. if an event has associated to a coroutine, it will be resumed.
+*/
 void Reactor::loop() {
 
   // 确保在正确的线程上运行
@@ -301,7 +304,7 @@ void Reactor::loop() {
               // if register coroutine, pengding coroutine to common coroutine_tasks
               if (ptr->getCoroutine()) { // 文件描述符包含协程
                 // the first one coroutine when epoll_wait back, just directly resume by this thread, not add to global CoroutineTaskQueue
-                // because every operate CoroutineTaskQueue should add mutex lock
+                // because every operate CoroutineTaskQueue should add mutex lock. improving the effectiveness
                 if (!first_coroutine) {   // 首先保存一个协程在一个变量中，而不是加入到协程任务队列中
                   first_coroutine = ptr->getCoroutine();
                   continue;
